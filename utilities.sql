@@ -1,3 +1,4 @@
+-- Ejecutar el script para resetear los datos en las tablas que afecta el sp de Ventas
 truncate table sales
 truncate table inventoryProduct
 INSERT INTO inventoryProduct (posttime, quantity, productId, operationTypeId)
@@ -12,14 +13,3 @@ VALUES ('2023-05-01 10:00:00', 50, 1, 1),
        ('2023-05-09 09:45:00', 55, 9, 1),
        ('2023-05-10 12:30:00', 50, 10, 1);
 
-
--- Simulando ejecuciones concurrentes
-
--- Abre dos ventanas de consulta o conexiones separadas en tu instancia de SQL Server.
--- Ejecuta las siguientes sentencias en ambas ventanas de consulta simultáneamente:
-
--- Ventana de Consulta 1
-EXEC [dbo].[registerSales] @client = 1, @product = 1, @seller = 1, @totalPrice = 50.00, @paymentType = 1, @contract = 1, @quantity = 10;
-
--- Ventana de Consulta 2
-EXEC [dbo].[registerSales] @client = 3, @product = 1, @seller = 13, @totalPrice = 60.00, @paymentType = 1, @contract = 2, @quantity = 3;
