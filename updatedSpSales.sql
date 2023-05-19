@@ -1,3 +1,4 @@
+-- SQLBook: Code
 CREATE PROCEDURE [dbo].[registerSales] 
     @client INT,
     @product INT,

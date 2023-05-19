@@ -2,8 +2,8 @@ CREATE PROCEDURE GetWasteMovementsByProducer
     @producerId INT
 AS
 BEGIN
-    -- READ COMMITED ISOLATION LEVEL hace que el sp solo lea datos que ya han sido confirmados en la base de datos y no datos modificados por otras transacciones que aún no han sido confirmadas (uncommitted).
-    SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+    SET TRANSACTION ISOLATION LEVEL READ COMMITTED; -- Set the isolation level to SNAPSHOT
+    BEGIN TRANSACTION;
 
     -- Escenario: Phantom Read
     -- Si durante la ejecución de este stored procedure se insertan, eliminan o modifican filas en la tabla wastes,
@@ -17,26 +17,27 @@ BEGIN
         p.producerName,
         co.countryName
     FROM
-        -- ROWLOCK hace que se aplique un bloqueo de fila a las tablas que se están leyendo, lo cual evita cambios concurrentes en las filas que se están leyendo.
-        dbo.wasteMovements wm WITH (ROWLOCK)
+        dbo.wasteMovements wm WITH (READPAST) -- Add READPAST hint
     INNER JOIN
-        dbo.wastes w WITH (ROWLOCK) ON wm.wasteId = w.wasteId
+        dbo.wastes w ON wm.wasteId = w.wasteId
     INNER JOIN
-        dbo.wasteTypes wt WITH (ROWLOCK) ON w.wasteType = wt.wasteTypeId
+        dbo.wasteTypes wt ON w.wasteType = wt.wasteTypeId
     INNER JOIN
-        dbo.addresses a WITH (ROWLOCK) ON wm.addressId = a.addressId
+        dbo.addresses a ON wm.addressId = a.addressId
     INNER JOIN
-        dbo.countries co WITH (ROWLOCK) ON a.countryId = co.countryId
+        dbo.countries co ON a.countryId = co.countryId
     INNER JOIN
-        dbo.containers c WITH (ROWLOCK) ON wm.containerId = c.containerId
+        dbo.containers c ON wm.containerId = c.containerId
     INNER JOIN
-        dbo.containerTypes ct WITH (ROWLOCK) ON c.containerTypeId = ct.containerTypeId
+        dbo.containerTypes ct ON c.containerTypeId = ct.containerTypeId
     INNER JOIN
-        dbo.producersXmovements pxm WITH (ROWLOCK) ON wm.wasteMovementId = pxm.wasteMovementId
+        dbo.producersXmovements pxm ON wm.wasteMovementId = pxm.wasteMovementId
     INNER JOIN
-        dbo.producers p WITH (ROWLOCK) ON pxm.producerId = p.producerId
+        dbo.producers p ON pxm.producerId = p.producerId
     WHERE
         p.producerId = @producerId
     ORDER BY
         wm.posttime DESC;
-END
+
+    COMMIT;
+END;
