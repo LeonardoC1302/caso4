@@ -1,8 +1,9 @@
+-- SQLBook: Code
 CREATE PROCEDURE GetWasteMovementsByProducer
     @producerId INT
 AS
 BEGIN
-    SET TRANSACTION ISOLATION LEVEL READ COMMITTED; -- Set the isolation level to SNAPSHOT
+    SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
     BEGIN TRANSACTION;
 
     -- Escenario: Phantom Read
@@ -17,7 +18,7 @@ BEGIN
         p.producerName,
         co.countryName
     FROM
-        dbo.wasteMovements wm WITH (READPAST) -- Add READPAST hint
+        dbo.wasteMovements wm WITH (HOLDLOCK) -- Acquire a shared lock on the table
     INNER JOIN
         dbo.wastes w ON wm.wasteId = w.wasteId
     INNER JOIN
@@ -31,7 +32,7 @@ BEGIN
     INNER JOIN
         dbo.containerTypes ct ON c.containerTypeId = ct.containerTypeId
     INNER JOIN
-        dbo.producersXmovements pxm ON wm.wasteMovementId = pxm.wasteMovementId
+        dbo.producersXmovements pxm WITH (HOLDLOCK) ON wm.wasteMovementId = pxm.wasteMovementId -- Acquire a shared lock on the table
     INNER JOIN
         dbo.producers p ON pxm.producerId = p.producerId
     WHERE

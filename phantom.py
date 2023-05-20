@@ -32,7 +32,6 @@ def modify_wastes():
     cursor = conn.cursor()
     cursor.execute("INSERT INTO wasteMovements (posttime, responsibleName, signImage, addressId, movementTypeId, contractId, quantity, userId, checksum, computer, containerId, wasteId, carId) OUTPUT inserted.wasteMovementId VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", "2023-01-01 00:00:00.000", "phantom", 0, 1, 1, 1, 999.9, 1, 0, "Computer Phantom", 1, 1, 1)
     wasteMovementId = cursor.fetchone()[0]
-    # print(wasteMovementId)
     cursor.execute("INSERT INTO producersXmovements (producerId, wasteMovementId) VALUES (?,?)", 1,wasteMovementId)
     conn.commit()
     conn.close()
