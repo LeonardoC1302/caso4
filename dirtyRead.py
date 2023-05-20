@@ -5,7 +5,7 @@ import threading
 server = 'localhost'
 database = 'caso3'
 username = 'root'
-password = '123456'
+password = '123456' 
 
 # Stored procedure parameters
 client = 1
@@ -17,16 +17,10 @@ contract = 1
 quantitySale = 30
 quantityUpdate = 10
 
-# Barrier to synchronize the start of the threads
-barrier = threading.Barrier(2)
-
 def execute_sales():
     conn_str = f'DRIVER=SQL Server;SERVER={server};DATABASE={database};UID={username};PWD={password}'
     conn = pyodbc.connect(conn_str)
     cursor = conn.cursor()
-
-    # Wait for the barrier to synchronize the start of the threads
-    barrier.wait()
 
     cursor.execute("EXEC [dbo].[registerSales] ?, ?, ?, ?, ?, ?, ?", client, product, seller, total_price, payment_type, contract, quantitySale)
     conn.commit()
@@ -36,9 +30,6 @@ def execute_inventory():
     conn_str = f'DRIVER=SQL Server;SERVER={server};DATABASE={database};UID={username};PWD={password}'
     conn = pyodbc.connect(conn_str)
     cursor = conn.cursor()
-
-    # Wait for the barrier to synchronize the start of the threads
-    barrier.wait()
 
     cursor.execute("EXEC [dbo].[updateInventory] ?, ?", product, quantityUpdate)
     conn.commit()
@@ -66,6 +57,6 @@ conn.close()
 
 if result is not None:
     quantity = result[0]
-    print(f"The quantity in inventoryProduct for productId {product} is: {quantity}")
+    print(f"La cantidad en inventoryProduct para el producto {product} es: {quantity}")
 else:
     print("No rows found")

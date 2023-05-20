@@ -1,9 +1,10 @@
-CREATE PROCEDURE updateInventory
+alter PROCEDURE updateInventory
     @productId INT,
     @quantity INT
 AS
 BEGIN
     BEGIN TRANSACTION;
+	WAITFOR DELAY '00:00:01'; -- Wait for 1 second (adjust as needed)
     UPDATE inventoryProduct
     SET quantity = quantity - @quantity  -- Modify the quantity value as needed
     WHERE productId = @productId;  -- Specify the product you want to modify

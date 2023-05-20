@@ -31,7 +31,7 @@ BEGIN
         WAITFOR DELAY '00:00:05'; -- Wait for 5 seconds (adjust as needed)
 
         UPDATE inventoryProduct 
-        SET quantity = quantity - @quantity 
+        SET quantity = @availableStock - @quantity
         WHERE productId = @product; 
 
         INSERT INTO [dbo].[sales]
