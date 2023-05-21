@@ -8,55 +8,49 @@ username = 'root'
 password = '123456' 
 
 # Stored procedure parameters
-client = 1
 product = 1
-seller = 1
-total_price = 50.00
-payment_type = 1
-contract = 1
-quantitySale = 30
-quantityUpdate = 10
+quantity = 60 # Greater than 50 to read the dirty data (rollback)
 
-def execute_sales():
+def execute_update():
     conn_str = f'DRIVER=SQL Server;SERVER={server};DATABASE={database};UID={username};PWD={password}'
     conn = pyodbc.connect(conn_str)
     cursor = conn.cursor()
 
-    cursor.execute("EXEC [dbo].[registerSales] ?, ?, ?, ?, ?, ?, ?", client, product, seller, total_price, payment_type, contract, quantitySale)
+    cursor.execute("EXEC [dbo].[UpdateProductQuantity] ?, ?", product, quantity)
     conn.commit()
     conn.close()
 
-def execute_inventory():
+def execute_read():
     conn_str = f'DRIVER=SQL Server;SERVER={server};DATABASE={database};UID={username};PWD={password}'
     conn = pyodbc.connect(conn_str)
     cursor = conn.cursor()
 
-    cursor.execute("EXEC [dbo].[updateInventory] ?, ?", product, quantityUpdate)
+    cursor.execute("EXEC [dbo].[GetProductQuantity] ?", product)
+
+    rows = cursor.fetchall()
+    for row in rows:
+        print(row)
+    
     conn.commit()
     conn.close()
 
 # Create multiple threads to execute the stored procedures simultaneously
-inventory_thread = threading.Thread(target=execute_inventory)
-sales_thread = threading.Thread(target=execute_sales)
+threads = []
+num_threads = 2
 
-# Start both threads
-inventory_thread.start()
-sales_thread.start()
+for i in range(num_threads):
+    if i == 0:
+        thread = threading.Thread(target=execute_update)
+        threads.append(thread)
+        thread.start()
+    else:
+        thread = threading.Thread(target=execute_read)
+        threads.append(thread)
+        thread.start()
 
-# Wait for both threads to finish
-inventory_thread.join()
-sales_thread.join()
 
-# Check the quantity in the inventoryProduct table
-conn_str = f'DRIVER=SQL Server;SERVER={server};DATABASE={database};UID={username};PWD={password}'
-conn = pyodbc.connect(conn_str)
-cursor = conn.cursor()
-cursor.execute("SELECT quantity FROM inventoryProduct WHERE productId = ?", product)
-result = cursor.fetchone()
-conn.close()
 
-if result is not None:
-    quantity = result[0]
-    print(f"La cantidad en inventoryProduct para el producto {product} es: {quantity}")
-else:
-    print("No rows found")
+# Wait for all threads to finish
+for thread in threads:
+    thread.join()
+
