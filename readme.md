@@ -21,4 +21,8 @@
 - Check the files on [Phantom](./phantom/)
 
 ## Deadlock
+- On one query window execute 'exec moneyTransaction @senderId=1, @receiverId =2, @amount=100 
+- Afterwards, execute 'exec moneyTransaction @senderId=2, @receiverId =1, @amount=100 on another query window.
+- This should create a deadlock on the system
+- With the updated one when you run both querys there won´t be a deadlock
 - Check the files on [Deadlock](./deadlock/)
