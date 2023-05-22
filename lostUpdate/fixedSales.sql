@@ -24,6 +24,7 @@ BEGIN
 
     IF(@availableStock >= @quantity) 
     BEGIN
+        WAITFOR DELAY '00:00:05'
         UPDATE inventoryProduct SET quantity = quantity - @quantity WHERE productId = @product; 
 
         INSERT INTO [dbo].[sales]([clientId], [productId], [sellerId], [totalPrice], [posttime], [checksum], [paymentTypeId], [contractId], [quantity]) 

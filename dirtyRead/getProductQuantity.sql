@@ -10,7 +10,7 @@ BEGIN
     SELECT Quantity
     FROM inventoryProduct
     WHERE productId = @ProductId
-
+    
     -- Commit the transaction
     COMMIT
 END
