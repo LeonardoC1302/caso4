@@ -26,3 +26,100 @@
 - This should create a deadlock on the system
 - With the updated one when you run both querys there won´t be a deadlock
 - Check the files on [Deadlock](./deadlock/)
+
+# What does each Job do?
+## Recompile Stored Procedures
+```sql
+DECLARE @sql NVARCHAR(MAX);
+
+SET @sql = '';
+
+SELECT @sql = @sql + 'EXEC sp_recompile ''' + QUOTENAME(SCHEMA_NAME(schema_id)) + '.' + QUOTENAME(name) + ''';' + CHAR(13)
+FROM sys.procedures
+WHERE OBJECTPROPERTY(OBJECT_ID, 'IsMSShipped') = 0;
+
+EXEC sp_executesql @sql;
+```
+
+## Copy Register and Delete Old Information
+### Copy Data
+```sql
+DECLARE @MaxID INT;
+
+-- Insert into [caso3].[dbo].[sources]
+SELECT @MaxID = ISNULL(MAX(sourceId), 0)
+FROM [caso3].[dbo].[sources];
+
+INSERT INTO [caso3].[dbo].[sources]
+SELECT sourceName
+FROM [LEOC\SQLSERVER2022].[caso3].[dbo].[sources]
+WHERE sourceId > @MaxID;
+
+-- Insert into [caso3].[dbo].[levels]
+SELECT @MaxID = ISNULL(MAX(levelId), 0)
+FROM [caso3].[dbo].[levels];
+
+INSERT INTO [caso3].[dbo].[levels]
+SELECT description
+FROM [LEOC\SQLSERVER2022].[caso3].[dbo].[levels]
+WHERE levelId > @MaxID;
+
+-- Insert into [caso3].[dbo].[objectTypes]
+SELECT @MaxID = ISNULL(MAX(objectTypeId), 0)
+FROM [caso3].[dbo].[objectTypes];
+
+INSERT INTO [caso3].[dbo].[objectTypes]
+SELECT objectName
+FROM [LEOC\SQLSERVER2022].[caso3].[dbo].[objectTypes]
+WHERE objectTypeId > @MaxID;
+
+-- Insert into [caso3].[dbo].[eventTypes]
+SELECT @MaxID = ISNULL(MAX(eventTypeId), 0)
+FROM [caso3].[dbo].[eventTypes];
+
+INSERT INTO [caso3].[dbo].[eventTypes]
+SELECT typeName
+FROM [LEOC\SQLSERVER2022].[caso3].[dbo].[eventTypes]
+WHERE eventTypeId > @MaxID;
+
+-- Insert into [caso3].[dbo].[eventLogs]
+SELECT @MaxID = ISNULL(MAX(eventId), 0)
+FROM [caso3].[dbo].[eventLogs];
+
+INSERT INTO [caso3].[dbo].[eventLogs]
+SELECT posttime, computer, username, checksum, description, referenceId1, referenceId2, value1, value2, sourceId, levelId, eventTypeId, objectTypeId
+FROM [LEOC\SQLSERVER2022].[caso3].[dbo].[eventLogs]
+WHERE eventId > @MaxID;
+```
+### Delete Data
+```sql
+DELETE FROM [LEOC\SQLSERVER2022].[caso3].[dbo].[eventLogs]
+WHERE eventId NOT IN (
+    SELECT MAX(eventId)
+    FROM [LEOC\SQLSERVER2022].[caso3].[dbo].[eventLogs]
+);
+
+DELETE FROM [LEOC\SQLSERVER2022].[caso3].[dbo].[sources]
+WHERE sourceId NOT IN (
+    SELECT MAX(sourceId)
+    FROM [LEOC\SQLSERVER2022].[caso3].[dbo].[sources]
+);
+
+DELETE FROM [LEOC\SQLSERVER2022].[caso3].[dbo].[levels]
+WHERE levelId NOT IN (
+    SELECT MAX(levelId)
+    FROM [LEOC\SQLSERVER2022].[caso3].[dbo].[levels]
+);
+
+DELETE FROM [LEOC\SQLSERVER2022].[caso3].[dbo].[objectTypes]
+WHERE objectTypeId NOT IN (
+    SELECT MAX(objectTypeId)
+    FROM [LEOC\SQLSERVER2022].[caso3].[dbo].[objectTypes]
+);
+
+DELETE FROM [LEOC\SQLSERVER2022].[caso3].[dbo].[eventTypes]
+WHERE eventTypeId NOT IN (
+    SELECT MAX(eventTypeId)
+    FROM [LEOC\SQLSERVER2022].[caso3].[dbo].[eventTypes]
+);
+```
