@@ -15,7 +15,7 @@
 
 ## Phantom
 - On one query window execute 'exec GetWasteMovementsByProducer 1'
-- Afterwards, execute 'exec InsertWasteMovement "2023-01-01 00:00:00.000", "phantom", 0, 1, 1, 1, 999.9, 1, 0, "Computer Phantom", 1, 1, 1, 1' on another query window.
+- Afterwards, execute 'exec InsertWasteMovements "2023-01-01 00:00:00.000", "phantom", 0, 1, 1, 1, 999.9, 1, 0, "Computer Phantom", 1, 1, 1, 1' on another query window.
 - With the original sp, you should get a difference in the total registers returned.
 - With the updated one, both quantities should be equal.
 - Check the files on [Phantom](./phantom/)
@@ -27,6 +27,24 @@
 - With the updated one when you run both querys there won´t be a deadlock
 - Check the files on [Deadlock](./deadlock/)
 
+# How to check if encryption is working?
+- On one query window, execute this code:
+```sql
+SELECT 
+    m.definition
+FROM 
+    sys.sql_modules m
+INNER JOIN 
+    sys.objects o ON m.object_id = o.object_id
+WHERE 
+    o.type = 'P' -- Filter for stored procedures
+    AND o.name = 'registerSales'; -- Replace with the name of your stored procedure
+```
+- Also, go to programability section, you shouldn't be able to modify or see the code of the stored procedure.
+- Finally, execute this query to verify if the stored procedure is encrypted:
+```sql
+sp_HelpText [registerSales]
+```
 # What does each Job do?
 ## Recompile Stored Procedures
 ```sql

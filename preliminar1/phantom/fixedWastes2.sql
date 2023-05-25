@@ -7,6 +7,7 @@ BEGIN
     -- Escenario: Phantom Read
     -- Si durante la ejecución de este stored procedure se insertan, eliminan o modifican filas en la tabla wastes,
     -- es posible que se produzcan lecturas fantasma.
+    DECLARE @maxId INT;
     SELECT
         wm.posttime,
         wm.quantity,
@@ -37,6 +38,8 @@ BEGIN
         p.producerId = @producerId
     ORDER BY
         wm.posttime DESC;
+    SELECT @maxId = MAX(wasteMovements.wasteMovementId) -- Se guarda la fecha máxima
+    FROM dbo.wasteMovements;
     WAITFOR DELAY '00:00:010'
     SELECT
         wm.posttime,
@@ -65,7 +68,7 @@ BEGIN
     INNER JOIN
         dbo.producers p ON pxm.producerId = p.producerId
     WHERE
-        p.producerId = @producerId
+        p.producerId = @producerId AND wm.wasteMovementId <= @maxId -- Se filtra por la fecha máxima
     ORDER BY
         wm.posttime DESC;
     COMMIT

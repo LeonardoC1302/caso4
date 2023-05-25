@@ -26,7 +26,8 @@ BEGIN
     BEGIN
         WAITFOR DELAY '00:00:05'
         UPDATE inventoryProduct SET quantity = quantity - @quantity WHERE productId = @product; 
-
+        IF @Quantity < 0
+            ROLLBACK
         INSERT INTO [dbo].[sales]([clientId], [productId], [sellerId], [totalPrice], [posttime], [checksum], [paymentTypeId], [contractId], [quantity]) 
         VALUES (@client, @product, @seller, @totalPrice, GETDATE(), NULL, @paymentType, @contract, @quantity);
 

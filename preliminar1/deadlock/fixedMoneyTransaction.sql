@@ -5,7 +5,6 @@ CREATE PROCEDURE moneyTransaction
     @amount decimal(18, 2)
 AS
 BEGIN
-	SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
 	DECLARE @senderAmount decimal(18, 2);
 	SET @senderAmount = (SELECT balance FROM participants WHERE participantId = @senderId);
 	if(@senderAmount>= @amount)
