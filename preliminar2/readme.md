@@ -1,36 +1,12 @@
 # Create users to prove:
 ###  It is possible to deny all access to the database tables and operate it only by executing stored procedures
-- We will be using an user called sp
-- Create a new user and make sure to uncheck the 'map' option of the database on the User Mapping section
-- Use T-SQL to grant permissions to the user to execute the stored procedures
-```sql
-GRANT EXECUTE ON [schema].[procedure_name] TO [user_or_role]
-```
+- We will be using the user called sp
 
 ### It is possible to restrict the visibility of columns to certain users
-- After creating an user with permissions on the database, use T-SQL to deny access to certain columns
-```sql
-DENY SELECT ON [dbo].[YourTableName] (RestrictedColumn1, RestrictedColumn2) TO [YourUserName]
-```
+- We will be using the user called columns
 
 ### Roles can be created, and users can belong to roles. Those roles could have table and column restrictions that apply to the users that belong to said role
-- Create a new role with the following T-SQL
-```sql
-USE YourDatabaseName; -- Specify the database where you want to create the role
-CREATE ROLE [YourRoleName];
-```
-- Execute the following T-SQL to deny access to specific columns
-```sql
-DENY SELECT ON [dbo].[YourTableName] (DeniedColumn1, DeniedColumn2) TO [YourRoleName];
-```
-- Execute the following T_SQL to deny access to specific tables
-```sql
-DENY SELECT ON [dbo].[YourTableName] TO [YourRoleName];
-```
-- Execute the following T-SQL to add a user to the role
-```sql
-EXEC sp_addrolemember 'YourRoleName', 'YourUserName';
-```
+- We will be using the role called role1 and the user called userRole
 
 ### How sql server resolves permission priorities in the hierarchy, for example that a higher level denies access to something and a lower level is assigned
 - SQL Server follows a permission hierarchy where explicit DENY permissions take precedence over explicit GRANT permissions. 
