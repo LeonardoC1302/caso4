@@ -10,8 +10,8 @@ BEGIN
 	if(@senderAmount>= @amount)
 		BEGIN
 			BEGIN TRANSACTION
-            // Deadlock podría ocurrir cuando un participant A le manda X cantidad a un participant B y al mismo tiempo
-            // el participant B le manda Y cantidad al participant A 
+            -- Deadlock podría ocurrir cuando un participant A le manda X cantidad a un participant B y al mismo tiempo
+            -- el participant B le manda Y cantidad al participant A 
                 UPDATE participants
                 SET balance = balance - @amount where participantId = @senderId;
                 INSERT INTO [dbo].[transactions] ([amount],[transactionDescription],[transactionTypeId] ,[transactionDate])

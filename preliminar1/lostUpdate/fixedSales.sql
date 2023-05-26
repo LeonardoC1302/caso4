@@ -10,7 +10,6 @@ CREATE PROCEDURE [dbo].[registerSales]
 AS
 BEGIN 
     -- 'SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;' permite que las transaccciones concurrentes se serialicen adecuadamente
-    SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
     -- Se añade un BEGIN TRANSACTION y COMMIT para definir el inicio y fin de la transacción explícitamente y que el sp se trate como una sola unidad atómica en la ejecución
     BEGIN TRANSACTION;
 
@@ -20,7 +19,7 @@ BEGIN
     DECLARE @availableStock int;
 
     -- UPDLOCK añade un lock exclusivo a la fila que se está leyendo, lo cual evita que otras transacciones concurrentes puedan leerla o modificarla antes de que se termine la transacción actual
-    SET @availableStock = (SELECT TOP 1 inventoryProduct.quantity FROM inventoryProduct WITH (UPDLOCK) WHERE productId = @product);
+    SET @availableStock = (SELECT TOP 1 inventoryProduct.quantity FROM inventoryProduct WHERE productId = @product);
 
     IF(@availableStock >= @quantity) 
     BEGIN
