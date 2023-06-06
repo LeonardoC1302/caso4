@@ -17,6 +17,8 @@
 4. Implicit GRANT by server roles (sysadmin, securityadmin, etc.)
 
 # Testing the user permissions or restrictions
+- We will be using the user called conflict
+
 # Demonstration of the backup and restore process
 ## Full Backup
 - Open SSMS and go to the Object Explorer

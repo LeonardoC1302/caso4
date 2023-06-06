@@ -1,16 +1,16 @@
-﻿pointName;cityName
-Atlanta;New York
-Boston;Chicago
-Chicago;Houston
-Denver;Miami
-Houston;Houston
-Indianapolis;Miami
-Kansas City;New York
-Los Angeles;Los Angeles
-Miami;New York
-New York;Los Angeles
-Orlando;Chicago
-Philadelphia;Houston
-San Francisco;Chicago
-Seattle;Los Angeles
-Washington, D.C.;New York
+﻿pointName;cityName;Volumen total
+Orlando;Chicago;143493
+San Francisco;Chicago;151685
+Boston;Chicago;151739
+Chicago;Houston;156066
+Houston;Houston;161737
+Seattle;Los Angeles;166282
+Washington, D.C.;New York;169055
+Philadelphia;Houston;169975
+Indianapolis;Miami;170233
+Kansas City;New York;171124
+Denver;Miami;171924
+Los Angeles;Los Angeles;173017
+Miami;New York;177035
+New York;Los Angeles;177086
+Atlanta;New York;177412

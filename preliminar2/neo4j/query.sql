@@ -26,7 +26,16 @@ JOIN collectionAssignments ca ON ca.collectorId = c.collectorId
 GROUP BY c.collectorId, c.collectorName, c.balance
 ORDER BY SUM(ca.volumen);	
 
-SELECT cp.pointName, c.cityName
+SELECT cp.pointName, c.cityName, SUM(ca.volumen) as 'Volumen Total'
 FROM collectionPoints cp
 JOIN addresses ad ON ad.addressId = cp.addressId
 JOIN cities c ON c.cityId = ad.cityId
+JOIN collectionAssignments ca on ca.collectionPointId = cp.collectionPointId
+GROUP BY cp.pointName, c.cityName
+ORDER BY SUM(ca.volumen)
+
+SELECT ca.collectionAssignmentId, c.collectorName, p.producerName, ca.collectionDate, cp.pointName, ca.volumen
+FROM collectionAssignments ca
+JOIN collectors c ON c.collectorId = ca.collectorId
+JOIN producers p ON p.producerId = ca.producerId
+JOIN collectionPoints cp ON cp.collectionPointId = ca.collectionPointId
