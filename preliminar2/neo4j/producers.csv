@@ -1,11 +1,11 @@
-﻿producerId;producerName;grade;balance
-1;John Doe;8.50;1012.50
-2;Jane Smith;7.80;2512.50
-3;Bob Johnson;9.20;500.00
-4;Sarah Lee;4.40;750.00
-5;David Kim;8.90;2000.00
-6;Emily Clair;8.50;1012.50
-7;John Lucas;7.80;2512.50
-8;Bob Marley;9.20;500.00
-9;Sarah Stone;4.40;750.00
-10;Bruce Lee;8.90;2000.00
+﻿producerId;producerName;balance;industryTypeId;Volumen Total
+5;Christopher Wilson;1500.75;2;240586
+2;Emily Johnson;500.50;2;240805
+6;Jessica Taylor;800.00;1;245229
+10;Olivia Hernandez;1750.50;3;246120
+3;Michael Davis;750.25;1;248349
+7;Daniel Martinez;1200.50;3;249538
+1;John Smith;1000.00;1;252154
+8;Sarah Anderson;1800.25;2;252995
+4;Jennifer Brown;2000.00;3;255786
+9;David Thompson;950.00;1;256301

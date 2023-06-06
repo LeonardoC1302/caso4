@@ -12,3 +12,21 @@ ORDER BY c.CityName
 SELECT TOP 100 *
 FROM collectionAssignments
 ORDER BY NEWID();
+
+
+SELECT p.producerId, p.producerName, p.balance, p.industryTypeId, SUM(ca.volumen) as 'Volumen Total'
+FROM producers p
+JOIN collectionAssignments ca ON ca.producerId = p.producerId
+GROUP BY p.producerId, p.producerName, p.balance, p.industryTypeId
+ORDER BY SUM(ca.volumen);
+
+SELECT c.collectorId, c.collectorName, c.balance, SUM(ca.volumen) as 'Volumen Total'
+FROM collectors c
+JOIN collectionAssignments ca ON ca.collectorId = c.collectorId
+GROUP BY c.collectorId, c.collectorName, c.balance
+ORDER BY SUM(ca.volumen);	
+
+SELECT cp.pointName, c.cityName
+FROM collectionPoints cp
+JOIN addresses ad ON ad.addressId = cp.addressId
+JOIN cities c ON c.cityId = ad.cityId
