@@ -18,7 +18,7 @@ FROM
 	JOIN industryTypes i ON i.industryTypeId = pr.industryTypeId
 	JOIN countries ct ON ct.countryId = ad.countryId
 WHERE
-	a.collectionDate BETWEEN @startDate AND @endDate AND ad.countryId = @countryId
+	a.collectionDate BETWEEN @startDate AND @endDate AND ct.countryName = @countryName
 GROUP BY
 	ct.countryName,
 	i.industryTypeName,

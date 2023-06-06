@@ -10,7 +10,7 @@
         <IntegratedSecurity>true</IntegratedSecurity>
       </ConnectionProperties>
       <rd:SecurityType>Integrated</rd:SecurityType>
-      <rd:DataSourceID>e7c127f0-6e45-4947-9566-f75862d5408b</rd:DataSourceID>
+      <rd:DataSourceID>ed086287-6892-4461-b791-de65a4837c67</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
@@ -24,14 +24,14 @@
           <QueryParameter Name="@endDate">
             <Value>=Parameters!endDate.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@countryId">
-            <Value>=Parameters!countryId.Value</Value>
+          <QueryParameter Name="@countryName">
+            <Value>=Parameters!countryName.Value</Value>
           </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT
-	ad.countryId,
+	ct.countryName,
 	i.industryTypeName,
-	w.wasteType,
+	w.wasteName,
 	SUM(wxc.volume) AS TotalCollected,
 	SUM(p.processCost) AS TotalCost,
 	SUM(p.processPrice) AS TotalCharge,
@@ -46,28 +46,29 @@ FROM
 	JOIN processes p ON p.wasteTypeId = w.wasteType
 	JOIN producers pr ON pr.producerId = a.producerId
 	JOIN industryTypes i ON i.industryTypeId = pr.industryTypeId
+	JOIN countries ct ON ct.countryId = ad.countryId
 WHERE
-	a.collectionDate BETWEEN @startDate AND @endDate AND ad.countryId = @countryId
+	a.collectionDate BETWEEN @startDate AND @endDate AND ct.countryName = @countryName
 GROUP BY
-	ad.countryId,
+	ct.countryName,
 	i.industryTypeName,
-	w.wasteType
+	w.wasteName
 ORDER BY
-	w.wasteType ASC</CommandText>
+	w.wasteName ASC</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
-        <Field Name="countryId">
-          <DataField>countryId</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
+        <Field Name="countryName">
+          <DataField>countryName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="industryTypeName">
           <DataField>industryTypeName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="wasteType">
-          <DataField>wasteType</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
+        <Field Name="wasteName">
+          <DataField>wasteName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="TotalCollected">
           <DataField>TotalCollected</DataField>
@@ -84,6 +85,18 @@ ORDER BY
         <Field Name="NetProfit">
           <DataField>NetProfit</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="DataSet2">
+      <Query>
+        <DataSourceName>caso3</DataSourceName>
+        <CommandText>SELECT countryName FROM countries</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="countryName">
+          <DataField>countryName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -127,11 +140,10 @@ ORDER BY
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Country ID</Value>
+                                  <Value>Country Name</Value>
                                   <Style>
                                     <FontSize>11pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
-                                    <Color>DimGray</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -183,11 +195,10 @@ ORDER BY
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Waste Type</Value>
+                                  <Value>Waste Name</Value>
                                   <Style>
                                     <FontSize>11pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
-                                    <Color>DimGray</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -243,7 +254,6 @@ ORDER BY
                                   <Style>
                                     <FontSize>11pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
-                                    <Color>DimGray</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -299,7 +309,6 @@ ORDER BY
                                   <Style>
                                     <FontSize>11pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
-                                    <Color>DimGray</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -355,7 +364,6 @@ ORDER BY
                                   <Style>
                                     <FontSize>11pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
-                                    <Color>DimGray</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -411,7 +419,6 @@ ORDER BY
                                   <Style>
                                     <FontSize>11pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
-                                    <Color>DimGray</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -461,14 +468,14 @@ ORDER BY
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="countryId">
+                        <Textbox Name="countryName">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!countryId.Value</Value>
+                                  <Value>=Fields!countryName.Value</Value>
                                   <Style>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>#333333</Color>
@@ -480,7 +487,7 @@ ORDER BY
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>countryId</rd:DefaultName>
+                          <rd:DefaultName>countryName</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
@@ -516,14 +523,14 @@ ORDER BY
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="wasteType">
+                        <Textbox Name="wasteName">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!wasteType.Value</Value>
+                                  <Value>=Fields!wasteName.Value</Value>
                                   <Style>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>#333333</Color>
@@ -535,7 +542,7 @@ ORDER BY
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>wasteType</rd:DefaultName>
+                          <rd:DefaultName>wasteName</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
@@ -895,7 +902,7 @@ ORDER BY
                               <Style>Solid</Style>
                               <Width>1pt</Width>
                             </RightBorder>
-                            <BackgroundColor>Salmon</BackgroundColor>
+                            <BackgroundColor>DarkSalmon</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -951,7 +958,7 @@ ORDER BY
                               <Style>Solid</Style>
                               <Width>1pt</Width>
                             </RightBorder>
-                            <BackgroundColor>Salmon</BackgroundColor>
+                            <BackgroundColor>DarkSalmon</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1007,7 +1014,7 @@ ORDER BY
                               <Style>Solid</Style>
                               <Width>1pt</Width>
                             </RightBorder>
-                            <BackgroundColor>Salmon</BackgroundColor>
+                            <BackgroundColor>DarkSalmon</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1063,7 +1070,7 @@ ORDER BY
                               <Style>Solid</Style>
                               <Width>1pt</Width>
                             </RightBorder>
-                            <BackgroundColor>Salmon</BackgroundColor>
+                            <BackgroundColor>DarkSalmon</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1119,7 +1126,7 @@ ORDER BY
                               <Style>Solid</Style>
                               <Width>1pt</Width>
                             </RightBorder>
-                            <BackgroundColor>Salmon</BackgroundColor>
+                            <BackgroundColor>DarkSalmon</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1494,11 +1501,10 @@ ORDER BY
                           <Paragraph>
                             <TextRuns>
                               <TextRun>
-                                <Value>Industry Type</Value>
+                                <Value>Industry Type Name</Value>
                                 <Style>
                                   <FontSize>11pt</FontSize>
                                   <FontWeight>Bold</FontWeight>
-                                  <Color>DimGray</Color>
                                 </Style>
                               </TextRun>
                             </TextRuns>
@@ -1604,7 +1610,7 @@ ORDER BY
                             <Style>Solid</Style>
                             <Width>1pt</Width>
                           </RightBorder>
-                          <BackgroundColor>LightGrey</BackgroundColor>
+                          <BackgroundColor>White</BackgroundColor>
                           <PaddingLeft>2pt</PaddingLeft>
                           <PaddingRight>2pt</PaddingRight>
                           <PaddingTop>2pt</PaddingTop>
@@ -1688,7 +1694,7 @@ ORDER BY
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet1</DataSetName>
-            <Top>23.28333mm</Top>
+            <Top>23.54792mm</Top>
             <Left>0mm</Left>
             <Height>24mm</Height>
             <Width>175mm</Width>
@@ -1750,7 +1756,7 @@ ORDER BY
             </Paragraphs>
             <rd:DefaultName>Textbox38</rd:DefaultName>
             <Top>14.46389mm</Top>
-            <Left>0mm</Left>
+            <Left>1.81428mm</Left>
             <Height>6mm</Height>
             <Width>137.88572mm</Width>
             <ZIndex>2</ZIndex>
@@ -1830,16 +1836,23 @@ ORDER BY
   </ReportSections>
   <ReportParameters>
     <ReportParameter Name="startDate">
-      <DataType>String</DataType>
+      <DataType>DateTime</DataType>
       <Prompt>start Date</Prompt>
     </ReportParameter>
     <ReportParameter Name="endDate">
-      <DataType>String</DataType>
+      <DataType>DateTime</DataType>
       <Prompt>end Date</Prompt>
     </ReportParameter>
-    <ReportParameter Name="countryId">
+    <ReportParameter Name="countryName">
       <DataType>String</DataType>
-      <Prompt>country Id</Prompt>
+      <Prompt>country Name</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>DataSet2</DataSetName>
+          <ValueField>countryName</ValueField>
+          <LabelField>countryName</LabelField>
+        </DataSetReference>
+      </ValidValues>
     </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
@@ -1860,11 +1873,11 @@ ORDER BY
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
           <RowIndex>0</RowIndex>
-          <ParameterName>countryId</ParameterName>
+          <ParameterName>countryName</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
   </ReportParametersLayout>
   <rd:ReportUnitType>Mm</rd:ReportUnitType>
-  <rd:ReportID>094b54e5-f36a-40e7-b0a9-890f8101cb3d</rd:ReportID>
+  <rd:ReportID>5fa94ea8-48e1-4f23-a1af-0a9d5c36b4e8</rd:ReportID>
 </Report>
