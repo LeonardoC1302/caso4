@@ -34,8 +34,10 @@ JOIN collectionAssignments ca on ca.collectionPointId = cp.collectionPointId
 GROUP BY cp.pointName, c.cityName
 ORDER BY SUM(ca.volumen)
 
-SELECT ca.collectionAssignmentId, c.collectorName, p.producerName, ca.collectionDate, cp.pointName, ca.volumen
+SELECT TOP 100
+ca.collectionAssignmentId, c.collectorName, p.producerName, ca.collectionDate, cp.pointName, ca.volumen
 FROM collectionAssignments ca
 JOIN collectors c ON c.collectorId = ca.collectorId
 JOIN producers p ON p.producerId = ca.producerId
 JOIN collectionPoints cp ON cp.collectionPointId = ca.collectionPointId
+ORDER BY NEWID();

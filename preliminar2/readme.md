@@ -10,14 +10,13 @@
 
 ### How sql server resolves permission priorities in the hierarchy, for example that a higher level denies access to something and a lower level is assigned
 - SQL Server follows a permission hierarchy where explicit DENY permissions take precedence over explicit GRANT permissions. 
-- Basically, it follows this priority order from highest to lowest:
-1. Explicit DENY
-2. Explicit GRANT
-3. Implicit DENY by database roles (public, db_owner, db_datareader, etc.)
-4. Implicit GRANT by server roles (sysadmin, securityadmin, etc.)
-
+- The hierarchy can be summarized as follows:
+1. Server-level Roles
+2. Database-Level Roles
+3. Object-Level Permissions (tables, views, sps, etc.)
+4. Deny - Grant
 # Testing the user permissions or restrictions
-- We will be using the user called conflict
+- We will be using the user called conflict, conflict2
 
 # Demonstration of the backup and restore process
 ## Full Backup
