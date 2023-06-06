@@ -1724,7 +1724,6 @@ ORDER BY
             <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
             <rd:DefaultName>ReportTitle</rd:DefaultName>
             <Top>0mm</Top>
-            <Left>0cm</Left>
             <Height>12.7mm</Height>
             <Width>139.7mm</Width>
             <ZIndex>1</ZIndex>
@@ -1745,9 +1744,7 @@ ORDER BY
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>="Collections from " &amp; CStr(Parameters!startDate.Value) &amp; " to " &amp; CStr(Parameters!endDate.Value)
-
-</Value>
+                    <Value>="Collections of " &amp; CStr(Parameters!countryName.Value) &amp;  " from " &amp; CStr(Parameters!startDate.Value) &amp; " to " &amp; CStr(Parameters!endDate.Value)</Value>
                     <Style />
                   </TextRun>
                 </TextRuns>
@@ -1755,7 +1752,7 @@ ORDER BY
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox38</rd:DefaultName>
-            <Top>14.46389mm</Top>
+            <Top>14.11111mm</Top>
             <Left>1.81428mm</Left>
             <Height>6mm</Height>
             <Width>137.88572mm</Width>
